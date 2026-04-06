@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>PageTurn — Browse Books</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1a1209;
+      --parchment:  #f5f0e8;
+      --cream:      #fdf8f0;
+      --brown:      #6b3f1f;
+      --gold:       #c8972a;
+      --rust:       #a84c1b;
+      --sage:       #5a7a5a;
+      --muted:      #8a7060;
+      --border:     #e0d5c4;
+      --shadow:     rgba(26,18,9,0.12);
+    }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--brown);
+      background-image: linear-gradient(90deg, #4a2910 0%, #6b3f1f 50%, #4a2910 100%);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.75);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+    .nav-btn .badge {
+      position: absolute;
+      top: 2px; right: 4px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.62rem;
+      font-weight: 900;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .nav-user {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-user-name {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.65);
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.75);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* ── MAIN ── */
+    .container { max-width: 1180px; margin: 0 auto; padding: 40px 24px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--brown);
+    }
+    .page-header p { font-size: 0.88rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── SEARCH BAR ── */
+    .search-bar {
+      display: flex; gap: 10px; margin-bottom: 28px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 11px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      background: var(--cream);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-bar input:focus { border-color: var(--brown); }
+    .search-bar input::placeholder { color: #bbb; }
+
+    .btn {
+      padding: 11px 20px;
+      border: none;
+      border-radius: 3px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--brown); color: var(--parchment); }
+    .btn-primary:hover { background: #8b5225; }
+    .btn-gold { background: var(--gold); color: var(--ink); }
+    .btn-gold:hover { background: #b8871a; }
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: var(--brown); color: var(--brown); }
+    .btn-sm { padding: 7px 14px; font-size: 0.78rem; }
+    .btn-danger { background: var(--rust); color: #fff; }
+    .btn-danger:hover { background: #8a3a10; }
+
+    /* ── GENRE FILTERS ── */
+    .genre-filters {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+    }
+    .genre-chip {
+      padding: 6px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      background: var(--cream);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .genre-chip:hover, .genre-chip.active {
+      background: var(--brown);
+      border-color: var(--brown);
+      color: #fff;
+    }
+
+    /* ── BOOK GRID ── */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 24px;
+    }
+
+    .book-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .book-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px var(--shadow);
+    }
+
+    .book-spine {
+      height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .book-spine::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.15));
+    }
+
+    .book-info { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; }
+    .book-genre {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .book-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .book-author {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .book-desc {
+      font-size: 0.78rem;
+      color: #999;
+      line-height: 1.5;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .book-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(245,240,232,0.5);
+    }
+    .book-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--brown);
+      font-weight: 700;
+    }
+    .book-qty {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .book-actions { display: flex; gap: 6px; }
+
+    /* ── PANELS (Cart, Orders, Wishlist, Admin) ── */
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeIn 0.3s ease both; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ── CART ── */
+    .cart-table { width: 100%; border-collapse: collapse; }
+    .cart-table th {
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    .cart-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .cart-table tr:last-child td { border-bottom: none; }
+
+    .cart-summary {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px;
+      margin-top: 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .cart-total {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--brown);
+    }
+
+    /* ── CHECKOUT MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,18,9,0.6);
+      backdrop-filter: blur(2px);
+      z-index: 200;
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+    .modal {
+      background: var(--cream);
+      border-radius: 4px;
+      width: 520px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+      animation: riseIn 0.3s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--brown);
+    }
+    .modal-close {
+      background: none; border: none; font-size: 1.4rem;
+      cursor: pointer; color: var(--muted); line-height: 1;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal-body { padding: 24px 28px; }
+    .modal-footer {
+      padding: 16px 28px 24px;
+      display: flex; gap: 12px; justify-content: flex-end;
+    }
+
+    .form-row { display: flex; gap: 16px; }
+    .form-row .field { flex: 1; }
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown);
+      margin-bottom: 6px;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      background: #fff;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.92rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--brown); }
+
+    /* ── ORDERS ── */
+    .order-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .order-header {
+      padding: 16px 20px;
+      background: rgba(107,63,31,0.06);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+    .order-id {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--brown);
+    }
+    .order-status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .status-pending  { background: #fff3cd; color: #856404; }
+    .status-paid     { background: #d1e7dd; color: #0a5c36; }
+    .status-shipped  { background: #cfe2ff; color: #084298; }
+
+    .order-body { padding: 16px 20px; }
+    .order-meta { display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.85rem; color: var(--muted); }
+    .order-meta strong { color: var(--ink); }
+
+    /* ── INVOICE ── */
+    .invoice {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 32px;
+      max-width: 500px;
+    }
+    .invoice-header {
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .invoice-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--brown);
+    }
+    .invoice-row {
+      display: flex; justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.9rem;
+    }
+    .invoice-total {
+      display: flex; justify-content: space-between;
+      padding: 14px 0 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--brown);
+      font-weight: 700;
+    }
+
+    /* ── ADMIN ── */
+    .admin-form {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px 32px;
+      max-width: 560px;
+    }
+    .admin-form h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--brown);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── WISHLIST ── */
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .wishlist-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 18px;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .wishlist-icon { font-size: 32px; }
+    .wishlist-info { flex: 1; }
+    .wishlist-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.98rem;
+      margin-bottom: 2px;
+    }
+    .wishlist-author { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+
+    /* ── EMPTY STATES ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--muted);
+    }
+    .empty-state .icon { font-size: 56px; margin-bottom: 16px; opacity: 0.5; }
+    .empty-state h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--brown);
+      margin-bottom: 8px;
+    }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center; padding: 60px;
+      color: var(--muted); font-size: 0.9rem;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; top: 24px; right: 24px;
+      padding: 14px 22px;
+      border-radius: 4px;
+      font-size: 0.88rem; font-weight: 700;
+      color: #fff; z-index: 9999;
+      animation: toastIn 0.3s ease both;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      max-width: 320px;
+    }
+    .toast.success { background: var(--sage); }
+    .toast.error   { background: var(--rust); }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Spine colors for variety */
+    .spine-0 { background: linear-gradient(135deg, #c8972a, #8b5225); }
+    .spine-1 { background: linear-gradient(135deg, #5a7a5a, #2d4a2d); }
+    .spine-2 { background: linear-gradient(135deg, #6b3f1f, #3a1a08); }
+    .spine-3 { background: linear-gradient(135deg, #a84c1b, #6a2800); }
+    .spine-4 { background: linear-gradient(135deg, #4a6fa5, #1a3a6a); }
+    .spine-5 { background: linear-gradient(135deg, #7a5a8a, #3a1a5a); }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--brown);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    table.order-items {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+    table.order-items th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    table.order-items td {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(224,213,196,0.5);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-brand" href="store.html">📚 PageTurn</a>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPanel('books')">Browse</button>
+    <button class="nav-btn" onclick="showPanel('cart'); loadCart()">
+      🛒 Cart <span class="badge" id="cart-badge" style="display:none">0</span>
+    </button>
+    <button class="nav-btn" onclick="showPanel('wishlist'); loadWishlist()">♡ Wishlist</button>
+    <button class="nav-btn" onclick="showPanel('orders'); loadOrders()">📦 Orders</button>
+    <button class="nav-btn" id="admin-nav-btn" onclick="showPanel('admin')" style="display:none">⚙ Admin</button>
+  </div>
+  <div class="nav-user">
+    <span class="nav-user-name" id="nav-username"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════ -->
+<!--  BOOKS PANEL                           -->
+<!-- ════════════════════════════════════════ -->
+<div class="container">
+
+  <div class="panel active" id="panel-books">
+    <div class="page-header">
+      <div>
+        <h1>Browse Books</h1>
+        <p>Discover your next great read</p>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search by title, author..." onkeydown="if(event.key==='Enter')searchBooks()"/>
+      <button class="btn btn-primary" onclick="searchBooks()">Search</button>
+      <button class="btn btn-ghost" onclick="loadBooks()">All Books</button>
+    </div>
+    <div class="genre-filters" id="genre-filters">
+      <div class="genre-chip active" onclick="filterGenre(null, this)">All</div>
+      <div class="genre-chip" onclick="filterGenre('Fiction', this)">Fiction</div>
+      <div class="genre-chip" onclick="filterGenre('Non-Fiction', this)">Non-Fiction</div>
+      <div class="genre-chip" onclick="filterGenre('Mystery', this)">Mystery</div>
+      <div class="genre-chip" onclick="filterGenre('Science Fiction', this)">Sci-Fi</div>
+      <div class="genre-chip" onclick="filterGenre('Romance', this)">Romance</div>
+      <div class="genre-chip" onclick="filterGenre('History', this)">History</div>
+      <div class="genre-chip" onclick="filterGenre('Horror', this)">Horror</div>
+      <div class="genre-chip" onclick="filterGenre('Biography', this)">Biography</div>
+    </div>
+    <div class="books-grid" id="books-grid">
+      <div class="loading">Loading books...</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!--  CART PANEL                            -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="panel" id="panel-cart">
+    <div class="page-header">
+      <div><h1>My Cart</h1><p>Review your selected books</p></div>
+      <button class="btn btn-gold" onclick="openCheckoutModal()">Proceed to Checkout →</button>
+    </div>
+    <div id="cart-content"><div class="loading">Loading cart...</div></div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!--  WISHLIST PANEL                        -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="panel" id="panel-wishlist">
+    <div class="page-header">
+      <div><h1>My Wishlist</h1><p>Books you'd love to read</p></div>
+    </div>
+    <div id="wishlist-content"><div class="loading">Loading wishlist...</div></div>
+    <div style="margin-top:40px">
+      <div class="section-title">📖 Recommended for You</div>
+      <div class="books-grid" id="reco-grid"><div class="loading">Loading recommendations...</div></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!--  ORDERS PANEL                          -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="panel" id="panel-orders">
+    <div class="page-header">
+      <div><h1>Order History</h1><p>Your past purchases</p></div>
+    </div>
+    <div id="orders-content"><div class="loading">Loading orders...</div></div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!--  ADMIN PANEL                           -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="panel" id="panel-admin">
+    <div class="page-header">
+      <div><h1>Admin Panel</h1><p>Manage the book catalog</p></div>
+    </div>
+    <div class="admin-form">
+      <h2>➕ Add New Book</h2>
+      <div class="form-row">
+        <div class="field"><label>Title</label><input type="text" id="a-title" placeholder="Book title"/></div>
+        <div class="field"><label>Author</label><input type="text" id="a-author" placeholder="Author name"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Price (₹)</label><input type="number" id="a-price" placeholder="299" min="0"/></div>
+        <div class="field"><label>Quantity</label><input type="number" id="a-qty" placeholder="10" min="1"/></div>
+      </div>
+      <div class="field"><label>Genre</label>
+        <select id="a-genre">
+          <option value="Fiction">Fiction</option>
+          <option value="Non-Fiction">Non-Fiction</option>
+          <option value="Mystery">Mystery</option>
+          <option value="Science Fiction">Science Fiction</option>
+          <option value="Romance">Romance</option>
+          <option value="History">History</option>
+          <option value="Horror">Horror</option>
+          <option value="Biography">Biography</option>
+        </select>
+      </div>
+      <div class="field"><label>Description</label><input type="text" id="a-desc" placeholder="Short description..."/></div>
+      <button class="btn btn-primary" onclick="adminAddBook()">Add Book to Catalog</button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ════════════════════════════════════════ -->
+<!--  CHECKOUT MODAL                        -->
+<!-- ════════════════════════════════════════ -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Checkout</h2>
+      <button class="modal-close" onclick="closeModal('checkout-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field"><label>Full Address</label><input type="text" id="c-address" placeholder="Street, Area"/></div>
+        <div class="field"><label>City</label><input type="text" id="c-city" placeholder="Mumbai"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Pin Code</label><input type="text" id="c-pin" placeholder="400001"/></div>
+        <div class="field"><label>Phone</label><input type="text" id="c-phone" placeholder="9876543210"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Shipping</label>
+          <select id="c-shipping">
+            <option value="Standard">Standard — ₹40</option>
+            <option value="Express">Express — ₹100</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Payment</label>
+          <select id="c-payment">
+            <option value="COD">Cash on Delivery</option>
+            <option value="UPI">UPI</option>
+            <option value="Credit Card">Credit Card</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('checkout-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="doCheckout()">Place Order →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!--  BUY NOW MODAL                         -->
+<!-- ════════════════════════════════════════ -->
+<div class="modal-overlay" id="buynow-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Buy Now</h2>
+      <button class="modal-close" onclick="closeModal('buynow-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="bn-bookid"/>
+      <div class="field"><label>Quantity</label><input type="number" id="bn-qty" value="1" min="1"/></div>
+      <div class="form-row">
+        <div class="field"><label>Address</label><input type="text" id="bn-address" placeholder="Street, Area"/></div>
+        <div class="field"><label>City</label><input type="text" id="bn-city" placeholder="Mumbai"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Pin Code</label><input type="text" id="bn-pin" placeholder="400001"/></div>
+        <div class="field"><label>Phone</label><input type="text" id="bn-phone" placeholder="9876543210"/></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('buynow-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="doBuyNow()">Confirm Purchase →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!--  INVOICE MODAL                         -->
+<!-- ════════════════════════════════════════ -->
+<div class="modal-overlay" id="invoice-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🎉 Order Confirmed!</h2>
+      <button class="modal-close" onclick="closeModal('invoice-modal'); showPanel('orders'); loadOrders()">✕</button>
+    </div>
+    <div class="modal-body" id="invoice-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="closeModal('invoice-modal'); showPanel('orders'); loadOrders()">View Orders</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+const token = sessionStorage.getItem('bsToken');
+const userEmail = sessionStorage.getItem('bsEmail');
+
+if (!token) window.location.href = 'index.html';
+
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Basic ' + token
+};
+
+// ── INIT ──────────────────────────────────────────────
+document.getElementById('nav-username').textContent = userEmail || '';
+loadBooks();
+checkAdmin();
+
+async function checkAdmin() {
+  // Simple heuristic: try an admin endpoint; if it works, show admin nav
+  // Actually check if role contains ADMIN via whoami-style approach
+  // For now show/hide based on local storage flag set at login
+  // We'll attempt a POST to /api/books/add with empty body to check auth
+  // Better: just store role from register
+  // We'll check by calling books all — always works; admin nav shown if user is admin
+  // Let's expose it always but it'll 403 on submit if not admin
+  document.getElementById('admin-nav-btn').style.display = 'block';
+}
+
+// ── TOAST ──────────────────────────────────────────────
+function toast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ── PANEL SWITCHING ────────────────────────────────────
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  // Highlight correct nav btn
+  const labels = ['books','cart','wishlist','orders','admin'];
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach(b => { if(b.textContent.toLowerCase().includes(name.slice(0,4))) b.classList.add('active'); });
+}
+
+// ── BOOKS ──────────────────────────────────────────────
+const bookEmojis = ['📗','📘','📙','📕','📔','📒'];
+const spineCount = 6;
+
+async function loadBooks() {
+  document.getElementById('books-grid').innerHTML = '<div class="loading">Loading books...</div>';
+  try {
+    const res = await fetch(`${API}/api/books/all`, { headers });
+    if (!res.ok) throw new Error('Failed');
+    const books = await res.json();
+    renderBooks(books);
+  } catch(e) {
+    document.getElementById('books-grid').innerHTML = '<div class="empty-state"><div class="icon">📵</div><h3>Cannot load books</h3><p>Make sure your Spring Boot server is running on port 8080.</p></div>';
+  }
+}
+
+function renderBooks(books) {
+  const grid = document.getElementById('books-grid');
+  if (!books.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">📭</div><h3>No books found</h3><p>Try a different search or genre.</p></div>';
+    return;
+  }
+  grid.innerHTML = books.map((b, i) => `
+    <div class="book-card" style="animation: fadeIn 0.3s ease ${(i%8)*0.05}s both">
+      <div class="book-spine spine-${i % spineCount}">
+        <span>${bookEmojis[i % bookEmojis.length]}</span>
+      </div>
+      <div class="book-info">
+        <div class="book-genre">${b.genre || 'General'}</div>
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">by ${b.author}</div>
+        <div class="book-desc">${b.description || 'No description available.'}</div>
+      </div>
+      <div class="book-footer">
+        <div>
+          <div class="book-price">₹${b.price}</div>
+          <div class="book-qty">${b.quantity > 0 ? b.quantity + ' in stock' : '⚠ Out of stock'}</div>
+        </div>
+        <div class="book-actions">
+          <button class="btn btn-ghost btn-sm" onclick="addToCart(${b.id})" title="Add to Cart">🛒</button>
+          <button class="btn btn-ghost btn-sm" onclick="openBuyNow(${b.id})" title="Buy Now">⚡</button>
+          <button class="btn btn-ghost btn-sm" onclick="addToWishlist(${b.id})" title="Wishlist">♡</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function searchBooks() {
+  const q = document.getElementById('search-input').value.trim();
+  if (!q) return loadBooks();
+  try {
+    const res = await fetch(`${API}/api/books/search?query=${encodeURIComponent(q)}`, { headers });
+    renderBooks(await res.json());
+  } catch(e) { toast('Search failed', 'error'); }
+}
+
+async function filterGenre(genre, el) {
+  document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (!genre) return loadBooks();
+  try {
+    const res = await fetch(`${API}/api/books/category/${encodeURIComponent(genre)}`, { headers });
+    renderBooks(await res.json());
+  } catch(e) { toast('Filter failed', 'error'); }
+}
+
+// ── CART ────────────────────────────────────────────────
+async function addToCart(bookId) {
+  try {
+    const res = await fetch(`${API}/api/cart/add`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ bookId, quantity: 1 })
+    });
+    const txt = await res.text();
+    if (res.ok) { toast('Added to cart! 🛒'); updateCartBadge(); }
+    else toast(txt, 'error');
+  } catch(e) { toast('Failed to add to cart', 'error'); }
+}
+
+async function loadCart() {
+  const el = document.getElementById('cart-content');
+  el.innerHTML = '<div class="loading">Loading cart...</div>';
+  try {
+    const res = await fetch(`${API}/api/cart/my-cart`, { headers });
+    const items = await res.json();
+    if (!items.length) {
+      el.innerHTML = '<div class="empty-state"><div class="icon">🛒</div><h3>Your cart is empty</h3><p>Browse books and add some to your cart.</p></div>';
+      return;
+    }
+    const total = items.reduce((s, i) => s + i.book.price * i.quantity, 0);
+    el.innerHTML = `
+      <div style="background:var(--cream);border:1px solid var(--border);border-radius:4px;overflow:hidden">
+        <table class="cart-table">
+          <thead><tr>
+            <th>Book</th><th>Author</th><th>Qty</th><th>Price</th><th>Subtotal</th>
+          </tr></thead>
+          <tbody>
+            ${items.map(i => `
+              <tr>
+                <td><strong>${i.book.title}</strong></td>
+                <td style="color:var(--muted)">${i.book.author}</td>
+                <td>${i.quantity}</td>
+                <td>₹${i.book.price}</td>
+                <td><strong>₹${(i.book.price * i.quantity).toFixed(2)}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="cart-summary">
+        <div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.08em">Total (excl. shipping)</div>
+          <div class="cart-total">₹${total.toFixed(2)}</div>
+        </div>
+        <button class="btn btn-gold" onclick="openCheckoutModal()">Proceed to Checkout →</button>
+      </div>
+    `;
+    updateCartBadge(items.length);
+  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h3>Could not load cart</h3></div>'; }
+}
+
+async function updateCartBadge(count) {
+  if (count === undefined) {
+    try {
+      const res = await fetch(`${API}/api/cart/my-cart`, { headers });
+      const items = await res.json();
+      count = items.length;
+    } catch { count = 0; }
+  }
+  const badge = document.getElementById('cart-badge');
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
+}
+
+// ── CHECKOUT ───────────────────────────────────────────
+function openCheckoutModal() {
+  document.getElementById('checkout-modal').classList.add('open');
+}
+
+async function doCheckout() {
+  const body = {
+    shippingAddress: document.getElementById('c-address').value,
+    city: document.getElementById('c-city').value,
+    pinCode: document.getElementById('c-pin').value,
+    phoneNumber: document.getElementById('c-phone').value,
+    shippingMethod: document.getElementById('c-shipping').value,
+    paymentMethod: document.getElementById('c-payment').value,
+  };
+  if (!body.shippingAddress || !body.city || !body.pinCode || !body.phoneNumber)
+    return toast('Please fill all fields', 'error');
+  try {
+    const res = await fetch(`${API}/api/cart/checkout`, {
+      method: 'POST', headers, body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      const inv = await res.json();
+      closeModal('checkout-modal');
+      showInvoice(inv);
+      updateCartBadge(0);
+    } else {
+      toast(await res.text(), 'error');
+    }
+  } catch(e) { toast('Checkout failed', 'error'); }
+}
+
+// ── BUY NOW ────────────────────────────────────────────
+function openBuyNow(bookId) {
+  document.getElementById('bn-bookid').value = bookId;
+  document.getElementById('buynow-modal').classList.add('open');
+}
+
+async function doBuyNow() {
+  const body = {
+    bookId: parseInt(document.getElementById('bn-bookid').value),
+    quantity: parseInt(document.getElementById('bn-qty').value),
+    shippingAddress: document.getElementById('bn-address').value,
+    city: document.getElementById('bn-city').value,
+    pinCode: document.getElementById('bn-pin').value,
+    phoneNumber: document.getElementById('bn-phone').value,
+  };
+  if (!body.shippingAddress || !body.city) return toast('Please fill all fields', 'error');
+  try {
+    const res = await fetch(`${API}/api/orders/buy-now`, {
+      method: 'POST', headers, body: JSON.stringify(body)
+    });
+    const txt = await res.text();
+    if (res.ok) {
+      closeModal('buynow-modal');
+      toast('Purchase successful! ' + txt);
+    } else toast(txt, 'error');
+  } catch(e) { toast('Purchase failed', 'error'); }
+}
+
+// ── INVOICE ────────────────────────────────────────────
+function showInvoice(inv) {
+  document.getElementById('invoice-body').innerHTML = `
+    <div class="invoice">
+      <div class="invoice-header">
+        <div style="font-size:32px">📚</div>
+        <div class="invoice-title">PageTurn Bookstore</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Order Invoice</div>
+      </div>
+      <div class="invoice-row"><span style="color:var(--muted)">Order ID</span><strong>#${inv.orderId}</strong></div>
+      <div class="invoice-row"><span style="color:var(--muted)">Date</span><span>${new Date(inv.date).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'})}</span></div>
+      <div class="invoice-row"><span style="color:var(--muted)">Customer</span><span>${inv.customerName}</span></div>
+      <div class="invoice-row"><span style="color:var(--muted)">Address</span><span>${inv.fullAddress}</span></div>
+      <div class="invoice-row"><span style="color:var(--muted)">Payment</span><span>${inv.paymentMethod}</span></div>
+      <div class="invoice-row" style="margin-top:8px"><span style="color:var(--muted)">Subtotal</span><span>₹${inv.subTotal?.toFixed(2)}</span></div>
+      <div class="invoice-row"><span style="color:var(--muted)">Shipping</span><span>₹${inv.shippingCost?.toFixed(2)}</span></div>
+      <div class="invoice-total"><span>Total</span><span>₹${inv.totalAmount?.toFixed(2)}</span></div>
+    </div>
+  `;
+  document.getElementById('invoice-modal').classList.add('open');
+}
+
+// ── ORDERS ─────────────────────────────────────────────
+async function loadOrders() {
+  const el = document.getElementById('orders-content');
+  el.innerHTML = '<div class="loading">Loading orders...</div>';
+  try {
+    const res = await fetch(`${API}/api/orders/my-history`, { headers });
+    const orders = await res.json();
+    if (!orders.length) {
+      el.innerHTML = '<div class="empty-state"><div class="icon">📦</div><h3>No orders yet</h3><p>Your order history will appear here.</p></div>';
+      return;
+    }
+    el.innerHTML = orders.reverse().map(o => `
+      <div class="order-card">
+        <div class="order-header">
+          <span class="order-id">Order #${o.id}</span>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="font-size:0.85rem;color:var(--muted)">${new Date(o.orderDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</span>
+            <span class="order-status status-${(o.orderStatus||'pending').toLowerCase()}">${o.orderStatus || 'Pending'}</span>
+          </div>
+        </div>
+        <div class="order-body">
+          <div class="order-meta">
+            <div><span style="color:var(--muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em">Total</span><br><strong style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--brown)">₹${o.totalAmount?.toFixed(2)}</strong></div>
+            ${o.shippingAddress ? `<div><span style="color:var(--muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em">Delivered to</span><br><strong>${o.shippingAddress}, ${o.city} - ${o.pinCode}</strong></div>` : ''}
+            ${o.paymentMethod ? `<div><span style="color:var(--muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em">Payment</span><br><strong>${o.paymentMethod}</strong></div>` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h3>Could not load orders</h3></div>'; }
+}
+
+// ── WISHLIST ───────────────────────────────────────────
+async function addToWishlist(bookId) {
+  try {
+    const res = await fetch(`${API}/api/wishlist/add`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ bookId })
+    });
+    if (res.ok) toast('Added to wishlist! ♥');
+    else toast(await res.text(), 'error');
+  } catch(e) { toast('Could not add to wishlist', 'error'); }
+}
+
+async function loadWishlist() {
+  const el = document.getElementById('wishlist-content');
+  el.innerHTML = '<div class="loading">Loading wishlist...</div>';
+  try {
+    const res = await fetch(`${API}/api/wishlist/my-wishlist`, { headers });
+    const items = await res.json();
+    if (!items.length) {
+      el.innerHTML = '<div class="empty-state"><div class="icon">♡</div><h3>Wishlist is empty</h3><p>Heart a book while browsing to save it here.</p></div>';
+    } else {
+      el.innerHTML = `<div class="wishlist-grid">${items.map((w, i) => `
+        <div class="wishlist-card">
+          <div class="wishlist-icon">${bookEmojis[i % bookEmojis.length]}</div>
+          <div class="wishlist-info">
+            <div class="wishlist-title">${w.book.title}</div>
+            <div class="wishlist-author">by ${w.book.author}</div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="addToCart(${w.book.id})">🛒 Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      `).join('')}</div>`;
+    }
+    loadRecommendations();
+  } catch(e) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h3>Could not load wishlist</h3></div>';
+  }
+}
+
+async function loadRecommendations() {
+  const el = document.getElementById('reco-grid');
+  el.innerHTML = '<div class="loading">Loading...</div>';
+  try {
+    const res = await fetch(`${API}/api/recommendations`, { headers });
+    const books = await res.json();
+    if (!books.length) { el.innerHTML = '<p style="color:var(--muted)">No recommendations yet — add books to your wishlist!</p>'; return; }
+    renderRecommendations(books);
+  } catch(e) { el.innerHTML = '<p style="color:var(--muted)">Recommendations unavailable.</p>'; }
+}
+
+function renderRecommendations(books) {
+  const el = document.getElementById('reco-grid');
+  el.innerHTML = books.slice(0,8).map((b, i) => `
+    <div class="book-card" style="animation: fadeIn 0.3s ease ${i*0.05}s both">
+      <div class="book-spine spine-${i % spineCount}">
+        <span>${bookEmojis[i % bookEmojis.length]}</span>
+      </div>
+      <div class="book-info">
+        <div class="book-genre">${b.genre || 'General'}</div>
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">by ${b.author}</div>
+      </div>
+      <div class="book-footer">
+        <div class="book-price">₹${b.price}</div>
+        <div class="book-actions">
+          <button class="btn btn-ghost btn-sm" onclick="addToCart(${b.id})">🛒</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── ADMIN ──────────────────────────────────────────────
+async function adminAddBook() {
+  const body = {
+    title: document.getElementById('a-title').value,
+    author: document.getElementById('a-author').value,
+    price: parseFloat(document.getElementById('a-price').value),
+    quantity: parseInt(document.getElementById('a-qty').value),
+    genre: document.getElementById('a-genre').value,
+    description: document.getElementById('a-desc').value,
+  };
+  if (!body.title || !body.author || !body.price || !body.quantity)
+    return toast('Please fill all required fields', 'error');
+  try {
+    const res = await fetch(`${API}/api/books/add`, {
+      method: 'POST', headers, body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      toast('Book added to catalog! ✓');
+      ['a-title','a-author','a-price','a-qty','a-desc'].forEach(id => document.getElementById(id).value = '');
+    } else toast('Failed — are you an Admin?', 'error');
+  } catch(e) { toast('Failed to add book', 'error'); }
+}
+
+// ── HELPERS ────────────────────────────────────────────
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function logout() {
+  sessionStorage.clear();
+  window.location.href = 'index.html';
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+updateCartBadge();
+</script>
+</body>
+</html>

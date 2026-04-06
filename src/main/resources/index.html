@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PageTurn Bookstore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #1a1209;
+      --parchment: #f5f0e8;
+      --cream:     #fdf8f0;
+      --brown:     #6b3f1f;
+      --gold:      #c8972a;
+      --rust:      #a84c1b;
+      --sage:      #5a7a5a;
+      --shadow:    rgba(26,18,9,0.18);
+    }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Decorative background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(200,151,42,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(107,63,31,0.10) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236b3f1f' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-wrapper {
+      position: relative; z-index: 1;
+      display: flex;
+      gap: 0;
+      width: 900px;
+      max-width: 96vw;
+      min-height: 560px;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px var(--shadow), 0 2px 0 var(--gold);
+      animation: riseIn 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Left decorative panel */
+    .auth-brand {
+      width: 42%;
+      background: var(--brown);
+      background-image:
+        linear-gradient(160deg, #8b5225 0%, #4a2910 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-brand::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M0 0h40v40H0zm40 40h40v40H40z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .brand-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+
+    .brand-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      text-align: center;
+      line-height: 1.2;
+      position: relative;
+    }
+
+    .brand-tagline {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      margin-top: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .brand-divider {
+      width: 48px; height: 2px;
+      background: var(--gold);
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .brand-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* Right form panel */
+    .auth-panel {
+      flex: 1;
+      background: var(--cream);
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 0;
+      margin-bottom: 36px;
+      border-bottom: 2px solid #e0d5c4;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 0;
+      background: none;
+      border: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: var(--brown);
+      transform: scaleX(0);
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    .tab-btn.active { color: var(--brown); }
+    .tab-btn.active::after { transform: scaleX(1); }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--brown);
+      margin-bottom: 6px;
+    }
+
+    .form-subtitle {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown);
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #ddd4c4;
+      border-radius: 3px;
+      background: #fff;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--brown);
+      box-shadow: 0 0 0 3px rgba(107,63,31,0.1);
+    }
+    input::placeholder { color: #bbb; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--brown);
+      color: var(--parchment);
+      border: none;
+      border-radius: 3px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn:hover { background: #8b5225; }
+    .submit-btn:active { transform: scale(0.99); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeSlide 0.3s ease both; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .toast {
+      position: fixed;
+      top: 24px; right: 24px;
+      padding: 14px 22px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      z-index: 9999;
+      animation: toastIn 0.3s ease both;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .toast.success { background: var(--sage); }
+    .toast.error   { background: var(--rust); }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .auth-brand { display: none; }
+      .auth-panel { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <!-- Brand Side -->
+  <div class="auth-brand">
+    <div class="brand-icon">📚</div>
+    <div class="brand-title">PageTurn<br>Bookstore</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tagline">Your Literary Sanctuary</div>
+    <div class="brand-quote">"A reader lives a thousand lives before he dies."</div>
+  </div>
+
+  <!-- Auth Panel -->
+  <div class="auth-panel">
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="tab-content active" id="tab-login">
+      <div class="form-title">Welcome back</div>
+      <div class="form-subtitle">Sign in to your account to continue reading</div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" />
+      </div>
+      <button class="submit-btn" onclick="doLogin()">Sign In →</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="tab-content" id="tab-register">
+      <div class="form-title">Create account</div>
+      <div class="form-subtitle">Join thousands of book lovers today</div>
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="reg-name" placeholder="Jane Austen" />
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="reg-pass" placeholder="Choose a strong password" />
+      </div>
+      <button class="submit-btn" onclick="doRegister()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'http://localhost:8080';
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b,i) =>
+      b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  function toast(msg, type='success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-pass').value;
+    if (!email || !password) return toast('Please fill in all fields', 'error');
+
+    try {
+      const res = await fetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({email, password})
+      });
+      const text = await res.text();
+      if (res.ok) {
+        // Store credentials for Basic Auth (used by Spring Security)
+        sessionStorage.setItem('bsEmail', email);
+        sessionStorage.setItem('bsPass', password);
+        sessionStorage.setItem('bsToken', btoa(email + ':' + password));
+        toast('Welcome back! Redirecting...');
+        setTimeout(() => window.location.href = 'store.html', 1000);
+      } else {
+        toast(text, 'error');
+      }
+    } catch(e) {
+      toast('Cannot connect to server. Is it running?', 'error');
+    }
+  }
+
+  async function doRegister() {
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-pass').value;
+    if (!name || !email || !password) return toast('Please fill in all fields', 'error');
+
+    try {
+      const res = await fetch(`${API}/api/auth/register`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({name, email, password})
+      });
+      const text = await res.text();
+      if (res.ok) {
+        toast('Account created! Please sign in.');
+        setTimeout(() => switchTab('login'), 1200);
+      } else {
+        toast(text, 'error');
+      }
+    } catch(e) {
+      toast('Cannot connect to server. Is it running?', 'error');
+    }
+  }
+
+  // If already logged in, go to store
+  if (sessionStorage.getItem('bsToken')) window.location.href = 'store.html';
+
+  // Enter key support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('tab-login').classList.contains('active')) doLogin();
+      else doRegister();
+    }
+  });
+</script>
+</body>
+</html>
+dologin
