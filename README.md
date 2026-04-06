@@ -14,6 +14,14 @@ This project is a high-performance bookstore backend designed to solve the compl
 
 ---
 
+## 🚧 Current Development Status: Active
+This project is currently in **Phase 2** of development. While the Core CRUD and Security layers are stable, I am actively implementing advanced microservices-ready features.
+
+- [x] **Phase 1:** Core Bookstore API & Database Schema (Completed)
+- [x] **Phase 2:** JWT Authentication & Role-Based Access (Completed)
+- [/] **Phase 3:** Content-Based Recommendation Engine (In Progress 🛠️)
+- [ ] **Phase 4:** Dockerization & AWS Cloud Deployment (Planned)
+
 ## 🛠 Technical Deep Dive
 
 ### 🔐 Advanced Security Architecture
