@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Browse Books — PageTurn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/homepage.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <a class="brand" href="homepage.html">📚 PageTurn</a>
+    <div class="nav-links">
+        <a href="homepage.html" class="nav-link active">Browse</a>
+        <a href="cart.html"     class="nav-link">🛒 Cart <span id="cart-count" class="badge"></span></a>
+        <a href="wishlist.html" class="nav-link">♡ Wishlist</a>
+        <a href="orders.html"   class="nav-link">📦 Orders</a>
+        <a href="admin.html"    class="nav-link" id="admin-link" style="display:none">⚙ Admin</a>
+    </div>
+    <div class="nav-right">
+        <span id="nav-email"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="container">
+
+    <div class="page-header">
+        <h1>Browse Books</h1>
+        <p>Discover your next great read</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search by title or author..."
+               onkeydown="if(event.key==='Enter') searchBooks()"/>
+        <button onclick="searchBooks()">Search</button>
+        <button onclick="loadBooks()" class="btn-outline">Show All</button>
+    </div>
+
+    <!-- Genre Filter -->
+    <div class="genre-filters">
+        <span class="chip active" onclick="filterGenre(null, this)">All</span>
+        <span class="chip" onclick="filterGenre('Fiction', this)">Fiction</span>
+        <span class="chip" onclick="filterGenre('Non-Fiction', this)">Non-Fiction</span>
+        <span class="chip" onclick="filterGenre('Mystery', this)">Mystery</span>
+        <span class="chip" onclick="filterGenre('Science Fiction', this)">Sci-Fi</span>
+        <span class="chip" onclick="filterGenre('Romance', this)">Romance</span>
+        <span class="chip" onclick="filterGenre('History', this)">History</span>
+        <span class="chip" onclick="filterGenre('Horror', this)">Horror</span>
+        <span class="chip" onclick="filterGenre('Biography', this)">Biography</span>
+    </div>
+
+    <!-- Book Grid -->
+    <div class="books-grid" id="books-grid">
+        <p class="loading">Loading books...</p>
+    </div>
+
+</div>
+
+<script src="js/navbar.js"></script>
+<script src="js/homepage.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Invoice — PageTurn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/invoice.css">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="homepage.html">📚 PageTurn</a>
+    <div class="nav-links">
+        <a href="homepage.html" class="nav-link">Browse</a>
+        <a href="cart.html"     class="nav-link">🛒 Cart <span id="cart-count" class="badge"></span></a>
+        <a href="wishlist.html" class="nav-link">♡ Wishlist</a>
+        <a href="orders.html"   class="nav-link">📦 Orders</a>
+        <a href="admin.html"    class="nav-link" id="admin-link" style="display:none">⚙ Admin</a>
+    </div>
+    <div class="nav-right">
+        <span id="nav-email"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="success-banner">
+        🎉 Order Placed Successfully!
+    </div>
+
+    <div class="invoice-box" id="invoice-box">
+        <!-- Filled by JS -->
+    </div>
+
+    <div class="invoice-actions">
+        <a href="orders.html"   class="btn-orders">View My Orders</a>
+        <a href="homepage.html" class="btn-browse">Continue Shopping</a>
+    </div>
+</div>
+
+<script src="js/navbar.js"></script>
+<script src="js/invoice.js"></script>
+</body>
+</html>

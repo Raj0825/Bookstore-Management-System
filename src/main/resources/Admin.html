@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin — PageTurn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="homepage.html">📚 PageTurn</a>
+    <div class="nav-links">
+        <a href="homepage.html" class="nav-link">Browse</a>
+        <a href="cart.html"     class="nav-link">🛒 Cart <span id="cart-count" class="badge"></span></a>
+        <a href="wishlist.html" class="nav-link">♡ Wishlist</a>
+        <a href="orders.html"   class="nav-link">📦 Orders</a>
+        <a href="admin.html"    class="nav-link active" id="admin-link" style="display:none">⚙ Admin</a>
+    </div>
+    <div class="nav-right">
+        <span id="nav-email"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Admin Panel</h1>
+        <p>Manage the book catalog</p>
+    </div>
+
+    <!-- Access check message -->
+    <div id="access-denied" style="display:none">
+        <div class="empty">
+            <div class="icon">🔒</div>
+            <h3>Access Denied</h3>
+            <p>You need an Admin account to view this page.</p>
+        </div>
+    </div>
+
+    <!-- Admin form (only shown for ROLE_ADMIN) -->
+    <div id="admin-content" style="display:none">
+        <div class="admin-form">
+            <h2>➕ Add New Book</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="a-title" placeholder="Book title"/>
+                </div>
+                <div class="form-group">
+                    <label>Author *</label>
+                    <input type="text" id="a-author" placeholder="Author name"/>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Price (₹) *</label>
+                    <input type="number" id="a-price" placeholder="299" min="0"/>
+                </div>
+                <div class="form-group">
+                    <label>Quantity *</label>
+                    <input type="number" id="a-qty" placeholder="10" min="1"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Genre</label>
+                <select id="a-genre">
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Science Fiction">Science Fiction</option>
+                    <option value="Romance">Romance</option>
+                    <option value="History">History</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Biography">Biography</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="a-desc" placeholder="Short description of the book..."/>
+            </div>
+
+            <button class="btn-add" onclick="addBook()">Add Book to Catalog</button>
+
+            <div id="message"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/navbar.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

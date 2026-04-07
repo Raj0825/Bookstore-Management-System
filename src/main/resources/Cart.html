@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Cart — PageTurn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <a class="brand" href="homepage.html">📚 PageTurn</a>
+    <div class="nav-links">
+        <a href="homepage.html" class="nav-link">Browse</a>
+        <a href="cart.html"     class="nav-link active">🛒 Cart <span id="cart-count" class="badge"></span></a>
+        <a href="wishlist.html" class="nav-link">♡ Wishlist</a>
+        <a href="orders.html"   class="nav-link">📦 Orders</a>
+        <a href="admin.html"    class="nav-link" id="admin-link" style="display:none">⚙ Admin</a>
+    </div>
+    <div class="nav-right">
+        <span id="nav-email"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1>My Cart</h1>
+        <p>Review your selected books before checkout</p>
+    </div>
+
+    <!-- Cart items will be loaded here -->
+    <div id="cart-content">
+        <p class="loading">Loading cart...</p>
+    </div>
+
+    <!-- Checkout form (hidden until user clicks Checkout) -->
+    <div id="checkout-section" style="display:none">
+        <h2 class="section-title">Shipping Details</h2>
+
+        <div class="checkout-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Address</label>
+                    <input type="text" id="address" placeholder="Street, Area"/>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="city" placeholder="Mumbai"/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pin Code</label>
+                    <input type="text" id="pin" placeholder="400001"/>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="phone" placeholder="9876543210"/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Shipping Method</label>
+                    <select id="shipping">
+                        <option value="Standard">Standard — ₹40</option>
+                        <option value="Express">Express — ₹100</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="payment">
+                        <option value="COD">Cash on Delivery</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Credit Card">Credit Card</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="checkout-buttons">
+                <button class="btn btn-outline" onclick="hideCheckout()">Cancel</button>
+                <button class="btn btn-gold" onclick="placeOrder()">Place Order →</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/navbar.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>
