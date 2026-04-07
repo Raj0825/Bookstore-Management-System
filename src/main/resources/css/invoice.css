@@ -1,0 +1,96 @@
+.success-banner {
+  background: #d1e7dd;
+  color: #0a5c36;
+  text-align: center;
+  padding: 16px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  font-family: 'Playfair Display', serif;
+}
+
+.invoice-box {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 36px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.invoice-header {
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--gold);
+}
+
+.invoice-header .logo { font-size: 36px; margin-bottom: 8px; }
+
+.invoice-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  color: var(--brown);
+}
+
+.invoice-header p {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 0.9rem;
+}
+
+.invoice-row .label { color: var(--muted); }
+
+.invoice-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: var(--brown);
+  font-weight: 700;
+}
+
+.invoice-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.btn-orders,
+.btn-browse {
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-orders {
+  background: var(--brown);
+  color: var(--parchment);
+}
+
+.btn-orders:hover { background: #8b5225; }
+
+.btn-browse {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+}
+
+.btn-browse:hover { border-color: var(--brown); color: var(--brown); }
