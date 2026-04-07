@@ -1,0 +1,134 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brown:  #6b3f1f;
+  --gold:   #c8972a;
+  --cream:  #fdf8f0;
+  --parchment: #f5f0e8;
+  --border: #e0d5c4;
+  --muted:  #8a7060;
+  --red:    #a84c1b;
+  --green:  #5a7a5a;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--parchment);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 40px;
+  width: 420px;
+  max-width: 95vw;
+  box-shadow: 0 16px 48px rgba(26,18,9,0.12);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.card-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--brown);
+  margin-bottom: 6px;
+}
+
+.card-header p {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brown);
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.95rem;
+  color: #1a1209;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: var(--brown);
+  box-shadow: 0 0 0 3px rgba(107,63,31,0.1);
+}
+
+input::placeholder { color: #bbb; }
+
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: var(--brown);
+  color: var(--parchment);
+  border: none;
+  border-radius: 4px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover { background: #8b5225; }
+
+.switch-link {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.switch-link a {
+  color: var(--brown);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.switch-link a:hover { text-decoration: underline; }
+
+#message {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: none;
+  text-align: center;
+}
+
+#message.success { background: #d1e7dd; color: #0a5c36; display: block; }
+#message.error   { background: #f8d7da; color: #842029; display: block; }

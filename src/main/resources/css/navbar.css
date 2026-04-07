@@ -1,0 +1,180 @@
+/* Shared navbar — used on homepage, cart, orders, wishlist, admin */
+
+:root {
+  --brown:     #6b3f1f;
+  --gold:      #c8972a;
+  --cream:     #fdf8f0;
+  --parchment: #f5f0e8;
+  --border:    #e0d5c4;
+  --muted:     #8a7060;
+  --red:       #a84c1b;
+  --green:     #5a7a5a;
+  --ink:       #1a1209;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+nav {
+  background: linear-gradient(90deg, #4a2910, #6b3f1f, #4a2910);
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 3px;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+.badge {
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 0.62rem;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 10px;
+  margin-left: 3px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-right span {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.nav-right button {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-right button:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ── Common page layout ── */
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 36px 24px;
+}
+
+.page-header {
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--brown);
+}
+
+.page-header p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── Common buttons ── */
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-brown  { background: var(--brown); color: var(--parchment); }
+.btn-brown:hover  { background: #8b5225; }
+.btn-gold   { background: var(--gold);  color: var(--ink); }
+.btn-gold:hover   { background: #b8871a; }
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+}
+.btn-outline:hover { border-color: var(--brown); color: var(--brown); }
+
+/* ── Loading / Empty states ── */
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: var(--muted);
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--muted);
+}
+
+.empty .icon { font-size: 52px; margin-bottom: 14px; opacity: 0.5; }
+
+.empty h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--brown);
+  margin-bottom: 6px;
+}
