@@ -23,7 +23,7 @@ async function register() {
 
     if (response.ok) {
       showMessage('Account created! Redirecting to login...', 'success');
-      setTimeout(() => window.location.href = 'login.html', 1500);
+      setTimeout(() => window.location.href = 'Login.html', 1500);
     } else {
       showMessage(text, 'error');
     }

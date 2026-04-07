@@ -19,17 +19,21 @@ async function login() {
     const text = await response.text();
 
     if (response.ok) {
-      // Backend returns "Login successful|ROLE_USER" or "Login successful|ROLE_ADMIN"
+      // Split "Login successful|ROLE_USER" into parts
       const parts = text.split('|');
-      const role  = parts[1]; // ROLE_USER or ROLE_ADMIN
+      const role  = parts[1];   // "ROLE_USER" or "ROLE_ADMIN"
 
-      // Save login info for other pages to use
+      // Save everything to session
       sessionStorage.setItem('bsEmail', email);
       sessionStorage.setItem('bsToken', btoa(email + ':' + password));
       sessionStorage.setItem('bsRole',  role);
 
       showMessage('Login successful! Redirecting...', 'success');
-      setTimeout(() => window.location.href = 'homepage.html', 1000);
+
+      // ✅ This is the fix — redirect after short delay
+      setTimeout(() => {
+        window.location.href = 'Homepage.html';
+      }, 1);
 
     } else {
       showMessage(text, 'error');
@@ -46,7 +50,6 @@ function showMessage(text, type) {
   msg.className = type;
 }
 
-// Enter key support
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') login();
 });

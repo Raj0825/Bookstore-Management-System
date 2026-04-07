@@ -1,5 +1,15 @@
 // Shared across all pages — runs on every page that includes navbar.js
+// navbar.js
 
+const token = sessionStorage.getItem('bsToken');
+
+// ✅ FIX: Only redirect if NOT on login.html or register.html
+const isAuthPage = window.location.pathname.includes('login.html') ||
+                   window.location.pathname.includes('register.html');
+
+if (!token && !isAuthPage) {
+    window.location.href = 'login.html';
+}
 const API   = 'http://localhost:8080';
 const token = sessionStorage.getItem('bsToken');
 const role  = sessionStorage.getItem('bsRole');

@@ -3,6 +3,15 @@ const EMOJIS = ['📗', '📘', '📙', '📕', '📔', '📒'];
 // Load all books when page opens
 loadBooks();
 
+
+// homepage.js
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('bsToken')) {
+        loadBooks();
+        updateCartBadge();
+    }
+});
+
 async function loadBooks() {
   document.getElementById('books-grid').innerHTML = '<p class="loading">Loading books...</p>';
   try {
