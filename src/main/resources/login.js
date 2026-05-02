@@ -32,7 +32,7 @@ async function login() {
 
       // ✅ This is the fix — redirect after short delay
       setTimeout(() => {
-        window.location.href = 'Homepage.html';
+        window.location.href = '/resources/Homepage.html';
       }, 1);
 
     } else {
